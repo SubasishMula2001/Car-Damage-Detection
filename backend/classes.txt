@@ -1,0 +1,6 @@
+Front Normal
+Front Breakage
+Front Crushed
+Rear Normal
+Rear Breakage
+Rear Crushed

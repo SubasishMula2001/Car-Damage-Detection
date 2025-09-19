@@ -1,0 +1,39 @@
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environment
+venv/
+.env/
+
+# IDE files
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+detections.csv
+
+# Captured images
+backend/server_captures/
+captures/
+
+# Model checkpoints (tracked with DVC instead)
+*.pth
+*.pt
+*.h5
+
+# DVC cache
+.dvc/cache/
+.dvc/tmp/
+
+# Docker
+*.pid
+*.sock
