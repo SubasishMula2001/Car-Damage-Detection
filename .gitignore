@@ -49,3 +49,10 @@ Add-Content .gitignore "`ndvc-gdrive-sa.json"
 
 # if it was staged/committed, remove from git index
 git rm --cached dvc-gdrive-sa.json || echo "not tracked"
+
+# keep raw dataset out of git but allow DVC pointer files
+data/
+!data/*.dvc
+!data/**/.gitignore
+
+dvc-gdrive-sa.json
