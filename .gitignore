@@ -3,6 +3,7 @@ __pycache__/
 *.pyc
 *.pyo
 *.pyd
+data/
 
 # Virtual environment
 venv/
@@ -37,3 +38,14 @@ captures/
 # Docker
 *.pid
 *.sock
+
+# keep raw data out of git but allow DVC pointer files
+data/
+!data/*.dvc
+!data/**/.gitignore
+
+# add to .gitignore if not already
+Add-Content .gitignore "`ndvc-gdrive-sa.json"
+
+# if it was staged/committed, remove from git index
+git rm --cached dvc-gdrive-sa.json || echo "not tracked"
