@@ -56,3 +56,8 @@ data/
 !data/**/.gitignore
 
 dvc-gdrive-sa.json
+
+# ignore raw data but allow DVC pointer files
+data/
+!data/*.dvc
+!data/**/.gitignore
