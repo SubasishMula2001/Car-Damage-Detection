@@ -1,0 +1,13 @@
+{
+  "type": "service_account",
+  "project_id": "carmodel-472614",
+  "private_key_id": "6c184e759bcafe22717a16b320a09985f072f7f8",
+  "private_key": "-----BEGIN PRIVATE KEY-----\nMIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQCmqX39tmv1uW1z\n2sLGl0BqbGL54ruR66fXdKnbR5RjnUQGXLhP1hLaDmrlo6Ibf/0+2JmNmt1Ar76C\n3ugaIoV4cIh5oTVg/o1iPCpTLIerERdrSh0uxK8PXtuOdaWypOg/mZAKsFD+L9ze\nZ9WuYmRVzmjC/6HtyVOnyVgnXJYVfu/qZbUtXsk1qJ92QVA3cxgQZuVO74z6gQIu\nenPqPuO0klklyLrtDU5qDCfVOocVoQMLlhXMhcX0jOzet4XVGoqZV4odt1lGxno5\nj7ggkZZTMi7mKIOOB4V3agF1A+ahsslQ0MjXgHYulq80XDT91lVmUvUhjItEH4PC\nZDxSxAgbAgMBAAECggEAUvHKvwDRhSdGVmD7DAwNpomPzs6tTEesrjmlKXlb3CHS\nT5pIro8brcN8JxLDpI0T0/nHniaDU+TDW22ltRAWPiU/fs0g/EdjxQ6tf9yLHrOw\nZJironGHsI4kliduElUpMzHxcqhifscCVPv3aEUWq2/BSr8f73CBvmEiCuD03vgS\ng0ddxA9HJjNN3tgGeqXgPJNyPWBisC1Ow3wmrxNSXAhiHQEN8n5finSx0OFtF/c7\nwG1FWmBILv4hB0zXm1x1t6cVs/xrJrl84uGEa3nLnwoK7kRdnMkK4EKhR1gF9zJY\n2KdNgdvrpVFQTKiRLcM1f2CgpXCxEEqjxVr9amcdOQKBgQDZEzJuOQipLv5IAfxP\n1A/jHFTRq6ueSsGd9UQqtUViozXXEp+5yePbCIvSvM8hW4YULtKz4Zb+jxQv3+KW\nOulc2Q6o/SdmpUptMJZYUlIauhj2m2pHzpXjWdiafNjiyJyH9XyGrsyz6HeFOJP6\nyJx7N+yqYLdbI+LLVDSTWp3MeQKBgQDEjBigUkI0B2JJBuXCAzaqd0D6hOO6sRT6\npKmiZRVvQZIVMYOYdSre/jZX+q63dQ6NxogGGfctN2+gKtpMIk4l4b7hFF1EXvIE\ncA+UfJ1umgwDuOcGRNg3NW2hjY86170IqzuIkrhivZKgaQHFpJnmV57Un+GCtAI3\nDxKP/MusMwKBgAPUNtuC3gg97/ZNMqolz3HuGgDoykosf2XN4bnvIJ4wys5UYcTh\nLse6St0Yv36TIrZQbR8HJ6at12lQxapot50PpxaMAJnq6HksljpQmWonRjFzZFiH\n6FTuTMfM0/aMG1a6mcu2YZ36x8Dt0o5l43y468/FjPZql6GGhrbirk3hAoGBAIlh\nIxVsabnUL26703x4oo0kLdbta//iJrfKwIcyAHlza5hEs6asvvp+1Z1JKzYwK6wN\nSKZ7H7oLNYrOaScuE1GHKNRKV6aidqeDbGBted0E78DqTRCkrjxoq+hv+d03Tnnw\ntfwQEbFysDpPK13qX2gRdoNH/WhOSf4SGvdpyzLhAoGAIDceN70sIkcyT4Lemz6x\nxVYHqhTCTwJblwDBseF6vCtAbmDBZMxkGTg749yO+pLi02qc1/EH/vPwzFNhByh0\nzPSNWLOGt9bUNJqs7x0UnX0Zyx59oRy5ScTYkZGzLEuGjIrVdWfzCjiWuCuPBHJt\nfT3OUXoQvK7StNywC+CDilY=\n-----END PRIVATE KEY-----\n",
+  "client_email": "dvc-service-account@carmodel-472614.iam.gserviceaccount.com",
+  "client_id": "112989374431898520802",
+  "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+  "token_uri": "https://oauth2.googleapis.com/token",
+  "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
+  "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/dvc-service-account%40carmodel-472614.iam.gserviceaccount.com",
+  "universe_domain": "googleapis.com"
+}
