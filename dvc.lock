@@ -1,0 +1,65 @@
+schema: '2.0'
+stages:
+  prepare:
+    cmd: python backend/data_preprocessing.py
+    deps:
+    - path: backend/data_preprocessing.py
+      hash: md5
+      md5: a58f984263bec88d23589993b96b0464
+      size: 1392
+    - path: data/raw
+      hash: md5
+      md5: 5c350f841f386b0d0c24655d4b579f78.dir
+      size: 668821187
+      nfiles: 2300
+    params:
+      params.yaml:
+        prepare.seed: 42
+        prepare.test_size: 0.2
+    outs:
+    - path: data/processed
+      hash: md5
+      md5: ffdab2d4ec7df488dd5bcb03b905a52c.dir
+      size: 122132
+      nfiles: 1
+  train:
+    cmd: python backend/training.py
+    deps:
+    - path: backend/training.py
+      hash: md5
+      md5: 49922a3cf10a54edb1f2731920537723
+      size: 1290
+    - path: data/processed
+      hash: md5
+      md5: ffdab2d4ec7df488dd5bcb03b905a52c.dir
+      size: 122132
+      nfiles: 1
+    params:
+      params.yaml:
+        train.batch_size: 32
+        train.epochs: 10
+        train.learning_rate: 0.001
+    outs:
+    - path: backend/saved_model.pth
+      hash: md5
+      md5: 37883d8ad71a1781cdd971bd1a87f4b0
+      size: 94395778
+  evaluate:
+    cmd: python backend/evaluation.py
+    deps:
+    - path: backend/evaluation.py
+      hash: md5
+      md5: 8334d4fb107a489e49a578f2ee861016
+      size: 1040
+    - path: backend/saved_model.pth
+      hash: md5
+      md5: 37883d8ad71a1781cdd971bd1a87f4b0
+      size: 94395778
+    params:
+      params.yaml:
+        evaluate.batch_size: 32
+    outs:
+    - path: metrics.json
+      hash: md5
+      md5: e8ee7a32187b65f1f49b3ff69c2f964d
+      size: 31
