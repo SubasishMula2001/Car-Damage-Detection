@@ -1,0 +1,33 @@
+stages:
+  prepare:
+    cmd: python backend/data_preprocessing.py
+    deps:
+    - data/raw
+    - backend/data_preprocessing.py
+    params:
+    - prepare.seed
+    - prepare.test_size
+    outs:
+    - data/processed
+
+  train:
+    cmd: python backend/training.py
+    deps:
+    - data/processed
+    - backend/training.py
+    params:
+    - train.epochs
+    - train.learning_rate
+    - train.batch_size
+    outs:
+    - backend/saved_model.pth
+
+  evaluate:
+    cmd: python backend/evaluation.py
+    deps:
+    - backend/saved_model.pth
+    - backend/evaluation.py
+    params:
+    - evaluate.batch_size
+    metrics:
+    - metrics.json
