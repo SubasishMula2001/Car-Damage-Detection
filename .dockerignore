@@ -1,0 +1,35 @@
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environment
+venv/
+.env/
+
+# IDE
+.vscode/
+.idea/
+
+# Logs & Captures
+logs/
+*.log
+detections.csv
+backend/server_captures/
+captures/
+
+# Large models (track with DVC instead)
+*.pth
+*.pt
+*.h5
+venv/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+*.log
+captures/
+backend/server_captures/
+data/
+.dvc/

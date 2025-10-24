@@ -1,0 +1,63 @@
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+data/
+
+# Virtual environment
+venv/
+.env/
+
+# IDE files
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+detections.csv
+
+# Captured images
+backend/server_captures/
+captures/
+
+# Model checkpoints (tracked with DVC instead)
+*.pth
+*.pt
+*.h5
+
+# DVC cache
+.dvc/cache/
+.dvc/tmp/
+
+# Docker
+*.pid
+*.sock
+
+# keep raw data out of git but allow DVC pointer files
+data/
+!data/*.dvc
+!data/**/.gitignore
+
+# add to .gitignore if not already
+Add-Content .gitignore "`ndvc-gdrive-sa.json"
+
+# if it was staged/committed, remove from git index
+git rm --cached dvc-gdrive-sa.json || echo "not tracked"
+
+# keep raw dataset out of git but allow DVC pointer files
+data/
+!data/*.dvc
+!data/**/.gitignore
+
+dvc-gdrive-sa.json
+
+# ignore raw data but allow DVC pointer files
+data/
+!data/*.dvc
+!data/**/.gitignore

@@ -1,0 +1,63 @@
+﻿# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Virtual environment
+venv/
+.env/
+
+# IDE files
+.vscode/
+.idea/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Logs
+logs/
+*.log
+detections.csv
+
+# Captured images (server outputs)
+backend/server_captures/
+captures/
+
+# Model checkpoints (tracked with DVC instead)
+*.pth
+*.pt
+*.h5
+
+# DVC cache / temp (keep DVC internals out of git)
+.dvc/cache/
+.dvc/tmp/
+
+# Docker
+*.pid
+*.sock
+
+# Service account / secrets (keep them local, not in repo)
+dvc-gdrive-sa.json
+
+# Ignore raw data but allow DVC pointer files
+# (data/ actual files will be ignored, but pointer files like data/raw.dvc are allowed)
+data/
+!data/*.dvc
+!data/**/.gitignore
+
+# Keep tests artifacts out
+tests/*.jpg
+
+dvc-gdrive-sa.json
+.dvc/config.local
+.dvc/config.local
+
+.dvc/config.backup
+
+.dvc/config.local
+
+.dvc/config.local
+
+.dvc/config.local
