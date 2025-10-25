@@ -1,7 +1,6 @@
 pipeline {
   agent any
   environment {
-    PYTHON = "python3"
     VENV = ".venv"
   }
   stages {
@@ -13,30 +12,21 @@ pipeline {
         ])
       }
     }
-    stage('Setup Python') {
+    stage('Run inside Python image') {
       steps {
-        sh '''
-          ${PYTHON} -m venv ${VENV}
-          . ${VENV}/bin/activate
-          pip install --upgrade pip
-          pip install -r backend/requirements.txt dvc
-        '''
-      }
-    }
-    stage('Get Data') {
-      steps {
-        sh '''
-          . ${VENV}/bin/activate
-          dvc pull || true
-        '''
-      }
-    }
-    stage('Reproduce') {
-      steps {
-        sh '''
-          . ${VENV}/bin/activate
-          dvc repro -f
-        '''
+        script {
+          docker.image('python:3.9-slim').inside {
+            sh '''
+              apt-get update -y && apt-get install -y git build-essential
+              python -m venv ${VENV}
+              . ${VENV}/bin/activate
+              pip install --upgrade pip
+              pip install -r backend/requirements.txt dvc
+              dvc pull || true
+              dvc repro -f
+            '''
+          }
+        }
       }
     }
   }
