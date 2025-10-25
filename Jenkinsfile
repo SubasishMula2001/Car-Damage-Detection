@@ -18,11 +18,12 @@ pipeline {
     stage('Setup & Run') {
       steps {
         sh '''
-          apt-get update -y && apt-get install -y git build-essential python3-venv
-          python -m venv ${VENV}
+          apt-get update -y && apt-get install -y git build-essential python3-venv python3-distutils
+          ln -sf /usr/bin/python3 /usr/bin/python || true
+          python3 -m venv ${VENV}
           . ${VENV}/bin/activate
-          pip install --upgrade pip
-          pip install -r backend/requirements.txt dvc
+          python -m pip install --upgrade pip
+          python -m pip install -r backend/requirements.txt dvc
           dvc pull || true
           dvc repro -f
         '''
