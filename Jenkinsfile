@@ -1,7 +1,9 @@
 pipeline {
-  agent any
-  environment {
-    VENV = ".venv"
+  agent {
+    docker {
+      image 'python:3.12-slim'   // changed from python:3.9-slim
+      args  '-u root:root'
+    }
   }
   stages {
     stage('Checkout') {
@@ -12,27 +14,19 @@ pipeline {
         ])
       }
     }
-    stage('Run inside Python image') {
+    stage('Setup & Run') {
       steps {
-        script {
-          docker.image('python:3.9-slim').inside {
-            sh '''
-              apt-get update -y && apt-get install -y git build-essential
-              python -m venv ${VENV}
-              . ${VENV}/bin/activate
-              pip install --upgrade pip
-              pip install -r backend/requirements.txt dvc
-              dvc pull || true
-              dvc repro -f
-            '''
-          }
-        }
+        sh '''
+          apt-get update -y && apt-get install -y git build-essential
+          python -m venv .venv
+          . .venv/bin/activate
+          pip install --upgrade pip
+          pip install -r backend/requirements.txt dvc
+          dvc pull || true
+          dvc repro -f
+        '''
       }
     }
   }
-  post {
-    always {
-      archiveArtifacts artifacts: 'data/processed/**', allowEmptyArchive: true
-    }
-  }
+  post { always { archiveArtifacts artifacts: 'data/processed/**', allowEmptyArchive: true } }
 }
