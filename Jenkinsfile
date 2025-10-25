@@ -18,7 +18,7 @@ pipeline {
     stage('Setup & Run') {
       steps {
         sh '''
-          apt-get update -y && apt-get install -y git build-essential
+          apt-get update -y && apt-get install -y git build-essential python3-venv
           python -m venv ${VENV}
           . ${VENV}/bin/activate
           pip install --upgrade pip
