@@ -17,12 +17,12 @@ pipeline {
         docker {
           image 'python:3.10-slim'
           args '--user 0:0'
+          reuseNode true
         }
       }
       steps {
         sh '''
           set -e
-          id
           apt-get update -y
           apt-get install -y git build-essential
           rm -rf ${VENV}
