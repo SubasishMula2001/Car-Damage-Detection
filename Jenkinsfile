@@ -1,5 +1,10 @@
 pipeline {
-  agent any
+  agent {
+    docker {
+      image 'python:3.12-slim'
+      args  '-u root:root'
+    }
+  }
   environment { VENV = ".venv" }
   stages {
     stage('Checkout') {
@@ -13,6 +18,7 @@ pipeline {
     stage('Setup & Run') {
       steps {
         sh '''
+          apt-get update -y && apt-get install -y git build-essential
           python -m venv ${VENV}
           . ${VENV}/bin/activate
           pip install --upgrade pip
@@ -23,9 +29,5 @@ pipeline {
       }
     }
   }
-  post {
-    always {
-      archiveArtifacts artifacts: 'data/processed/**', allowEmptyArchive: true
-    }
-  }
+  post { always { archiveArtifacts artifacts: 'data/processed/**', allowEmptyArchive: true } }
 }
