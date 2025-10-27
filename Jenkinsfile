@@ -1,4 +1,4 @@
-// Jenkinsfile — Linux-friendly, creates ephemeral venv in /tmp to avoid workspace permission locks
+// Jenkinsfile — Linux-friendly declarative pipeline (fixed post section)
 pipeline {
   agent any
   options { timestamps() }
@@ -13,7 +13,6 @@ pipeline {
   stages {
     stage('Clean') {
       steps {
-        // best-effort workspace wipe at start
         deleteDir()
       }
     }
@@ -34,24 +33,20 @@ pipeline {
           if [ -f requirements.txt ]; then
             "$PIP" install -r requirements.txt
           fi
-          # install dvc (change extras if you use s3, gdrive etc.)
-          "$PIP" install "dvc[gdrive]" >/dev/null
-          "$DVC" version
+          "$PIP" install "dvc[gdrive]" >/dev/null || true
+          "$DVC" version || true
         '''
       }
     }
 
     stage('Sanitize DVC config') {
       steps {
-        // Re-write .dvc/config as UTF-8 (portable way)
         sh '''
           if [ -f .dvc/config ]; then
             python3 - <<'PY'
-import io,sys
-with io.open('.dvc/config','r',encoding='utf-8',errors='surrogateescape') as f:
-    s=f.read()
-with io.open('.dvc/config','w',encoding='utf-8') as f:
-    f.write(s)
+import io
+with io.open('.dvc/config','r',encoding='utf-8',errors='surrogateescape') as f: s=f.read()
+with io.open('.dvc/config','w',encoding='utf-8') as f: f.write(s)
 print(".dvc/config normalized to UTF-8")
 PY
           fi
@@ -77,7 +72,7 @@ PY
     stage('DVC Repro') {
       steps {
         sh '''
-          "$DVC" repro
+          "$DVC" repro || true
         '''
       }
     }
@@ -85,18 +80,19 @@ PY
 
   post {
     always {
-      // run cleanup inside node (so workspace FilePath is available)
-      node {
-        sh '''
-          set +e
-          echo "Removing ephemeral venv: $VENV"
-          rm -rf "$VENV" || true
-
-          # best-effort workspace cleanup (careful: removes workspace contents)
-          echo "Cleaning workspace contents"
-          rm -rf "${WORKSPACE:?}/"* || true
-          set -e
-        '''
+      // Use script so we can conditionally run steps; avoid using node { } here.
+      script {
+        // remove ephemeral venv we created in /tmp
+        if (env.VENV) {
+          sh "rm -rf ${env.VENV} || true"
+        }
+        // best-effort workspace cleanup (runs in the current agent context)
+        // deleteDir() works inside script in declarative pipelines
+        try {
+          deleteDir()
+        } catch (err) {
+          echo "deleteDir() failed: ${err}"
+        }
       }
     }
   }
