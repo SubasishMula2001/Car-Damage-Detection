@@ -29,6 +29,14 @@ pipeline {
       }
     }
 
+    stage('DVC Pull (optional)') {
+      when { expression { return fileExists('.dvc/config') } }
+      steps {
+        // If you use a GDrive service account, wrap these in withCredentials as shown earlier.
+        bat 'venv\\Scripts\\dvc pull -r gdrive-remote || echo "dvc pull skipped or failed"'
+      }
+    }
+
     stage('DVC') {
       steps { bat 'venv\\Scripts\\dvc repro' }
     }
