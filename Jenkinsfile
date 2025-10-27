@@ -1,85 +1,83 @@
+// Jenkinsfile — Linux-friendly, creates ephemeral venv in /tmp to avoid workspace permission locks
 pipeline {
   agent any
   options { timestamps() }
 
   environment {
-    // Windows PowerShell friendly venv path (unique per build)
-    VENV = "${env.TEMP}\\venv_${env.BUILD_NUMBER}"
-    PY = "${env.VENV}\\Scripts\\python.exe"
-    PIP = "${env.VENV}\\Scripts\\pip.exe"
-    DVC = "${env.VENV}\\Scripts\\dvc.exe"
+    VENV = "/tmp/venv_${env.BUILD_NUMBER}"
+    PY   = "${env.VENV}/bin/python3"
+    PIP  = "${env.VENV}/bin/pip"
+    DVC  = "${env.VENV}/bin/dvc"
   }
 
   stages {
     stage('Clean') {
       steps {
-        // best-effort initial workspace cleanup
+        // best-effort workspace wipe at start
         deleteDir()
       }
     }
 
     stage('Checkout') {
-      steps { checkout scm }
+      steps {
+        checkout scm
+      }
     }
 
     stage('Setup Python') {
       steps {
-        // use powershell for robust Windows path handling and error control
-        powershell '''
-          set-StrictMode -Version Latest
-          $ErrorActionPreference = "Stop"
-
-          $venv = "${env:VENV}"
-          Write-Output "Creating venv at $venv"
-
-          # create venv (py.exe must be on PATH)
-          py -3 -m venv $venv
-
-          # upgrade pip and install requirements if present
-          & "$venv\\Scripts\\pip.exe" install -U pip
-          if (Test-Path "requirements.txt") {
-            & "$venv\\Scripts\\pip.exe" install -r requirements.txt
-          }
-
-          # install dvc (gdrive if you need it) - retry once if transient network glitches
-          & "$venv\\Scripts\\pip.exe" install "dvc[gdrive]" -q
-          & "$venv\\Scripts\\dvc.exe" version
+        sh '''
+          set -euo pipefail
+          echo "Creating venv at $VENV"
+          python3 -m venv "$VENV"
+          "$PIP" install --upgrade pip
+          if [ -f requirements.txt ]; then
+            "$PIP" install -r requirements.txt
+          fi
+          # install dvc (change extras if you use s3, gdrive etc.)
+          "$PIP" install "dvc[gdrive]" >/dev/null
+          "$DVC" version
         '''
       }
     }
 
     stage('Sanitize DVC config') {
       steps {
-        powershell '''
-          if (Test-Path ".dvc\\config") {
-            # Re-write file with explicit UTF8 (no BOM)
-            $c = Get-Content .dvc\\config -Raw
-            [IO.File]::WriteAllText(".dvc\\config", $c, [Text.UTF8Encoding]::new($false))
-          }
+        // Re-write .dvc/config as UTF-8 (portable way)
+        sh '''
+          if [ -f .dvc/config ]; then
+            python3 - <<'PY'
+import io,sys
+with io.open('.dvc/config','r',encoding='utf-8',errors='surrogateescape') as f:
+    s=f.read()
+with io.open('.dvc/config','w',encoding='utf-8') as f:
+    f.write(s)
+print(".dvc/config normalized to UTF-8")
+PY
+          fi
         '''
       }
     }
 
     stage('DVC Pull (optional)') {
-      when { expression { return fileExists('.dvc\\config') } }
+      when { expression { fileExists('.dvc/config') } }
       steps {
-        powershell '''
-          $dvc = "${env:VENV}\\Scripts\\dvc.exe"
-          # wrap in try so failure doesn't halt pipeline (adjust as needed)
-          try {
-            & $dvc pull -r gdrive-remote
-          } catch {
-            Write-Warning "dvc pull failed or skipped: $($_.Exception.Message)"
-          }
+        sh '''
+          set +e
+          "$DVC" pull -r gdrive-remote
+          RC=$?
+          if [ $RC -ne 0 ]; then
+            echo "dvc pull failed or skipped (exit $RC)"
+          fi
+          set -e
         '''
       }
     }
 
-    stage('DVC repro') {
+    stage('DVC Repro') {
       steps {
-        powershell '''
-          $dvc = "${env:VENV}\\Scripts\\dvc.exe"
-          & $dvc repro
+        sh '''
+          "$DVC" repro
         '''
       }
     }
@@ -87,36 +85,19 @@ pipeline {
 
   post {
     always {
-      // robust cleanup: try to remove venv and workspace, with retries
-      powershell '''
-        $ErrorActionPreference = "Continue"
-        $venv = "${env:VENV}"
-        Write-Output "Cleaning venv: $venv"
+      // run cleanup inside node (so workspace FilePath is available)
+      node {
+        sh '''
+          set +e
+          echo "Removing ephemeral venv: $VENV"
+          rm -rf "$VENV" || true
 
-        function Remove-WithRetry($path, $attempts=3) {
-          for ($i=1; $i -le $attempts; $i++) {
-            try {
-              if (Test-Path $path) {
-                Remove-Item -LiteralPath $path -Recurse -Force -ErrorAction Stop
-              }
-              Write-Output "Removed $path"
-              return $true
-            } catch {
-              Write-Warning "Attempt $i to remove $path failed: $($_.Exception.Message)"
-              Start-Sleep -Seconds (2 * $i)
-            }
-          }
-          return $false
-        }
-
-        # attempt to remove venv
-        Remove-WithRetry $venv
-
-        # try workspace cleanup as fallback
-        try { Remove-Item -LiteralPath "${env.WORKSPACE}\\*" -Recurse -Force -ErrorAction SilentlyContinue } catch {}
-
-        # last attempt: call deleteDir from pipeline (Jenkins will already have done one at start)
-      '''
+          # best-effort workspace cleanup (careful: removes workspace contents)
+          echo "Cleaning workspace contents"
+          rm -rf "${WORKSPACE:?}/"* || true
+          set -e
+        '''
+      }
     }
   }
 }
