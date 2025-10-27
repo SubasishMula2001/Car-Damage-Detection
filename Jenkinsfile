@@ -18,10 +18,17 @@ pipeline {
     }
 
     stage('Checkout') {
-      steps {
-        checkout scm
-      }
-    }
+  steps {
+    checkout([
+      $class: 'GitSCM',
+      branches: [[name: '*/main']],
+      doGenerateSubmoduleConfigurations: false,
+      extensions: [[$class: 'CloneOption', depth: 1, noTags: false, shallow: true]],
+      userRemoteConfigs: [[url: 'https://github.com/SubasishMula2001/Car-Damage-Detection.git', credentialsId: 'git-creds']]
+    ])
+  }
+}
+
 
     stage('Setup Python') {
       steps {
