@@ -73,3 +73,6 @@ dvc-gdrive-sa.json
 data/
 !data/*.dvc
 !data/**/.gitignore
+# Google Search Console verification file
+google*.html
+googlecda5054b922c6952.html
