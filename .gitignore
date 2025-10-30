@@ -1,68 +1,75 @@
-﻿# Python cache
+﻿# -----------------------------
+# Python cache and compiled files
+# -----------------------------
 __pycache__/
 *.pyc
 *.pyo
 *.pyd
 
-# Virtual environment
+# -----------------------------
+# Virtual environments
+# -----------------------------
 venv/
 .env/
 
-# IDE files
+# -----------------------------
+# IDE and editor settings
+# -----------------------------
 .vscode/
 .idea/
 
-# OS files
+# -----------------------------
+# OS-generated files
+# -----------------------------
 .DS_Store
 Thumbs.db
 
-# Logs
+# -----------------------------
+# Logs and temporary files
+# -----------------------------
 logs/
 *.log
 detections.csv
+/metrics.json
 
-# Captured images (server outputs)
+# -----------------------------
+# Captured or generated images
+# -----------------------------
 backend/server_captures/
 captures/
+tests/*.jpg
 
-# Model checkpoints (tracked with DVC instead)
+# -----------------------------
+# Model checkpoints and weights
+# (These are managed via DVC or stored externally)
+# -----------------------------
 *.pth
 *.pt
 *.h5
 
-# DVC cache / temp (keep DVC internals out of git)
+# -----------------------------
+# DVC cache and temporary files
+# -----------------------------
 .dvc/cache/
 .dvc/tmp/
+.dvc/config.local
+.dvc/config.backup
 
-# Docker
+# -----------------------------
+# Docker runtime files
+# -----------------------------
 *.pid
 *.sock
 
-# Service account / secrets (keep them local, not in repo)
+# -----------------------------
+# Secrets and service account keys
+# -----------------------------
 dvc-gdrive-sa.json
 
-# Ignore raw data but allow DVC pointer files
-# (data/ actual files will be ignored, but pointer files like data/raw.dvc are allowed)
+# -----------------------------
+# Data handling
+# (Ignore actual data but keep DVC pointer files)
+# -----------------------------
 data/
 !data/*.dvc
 !data/**/.gitignore
-
-# Keep tests artifacts out
-tests/*.jpg
-
-dvc-gdrive-sa.json
-.dvc/config.local
-.dvc/config.local
-
-.dvc/config.backup
-
-.dvc/config.local
-
-.dvc/config.local
-
-.dvc/config.local
-
-.dvc/config.local
-
-.dvc/config.local
-/metrics.json
