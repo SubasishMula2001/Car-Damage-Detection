@@ -144,18 +144,52 @@ pipeline {
       }
     }
 
-    stage('Checkout') {
-      steps {
-        // Use checkout scm (Jenkinsfile placed in repo) or explicit Git configuration
-        checkout([
-          $class: 'GitSCM',
-          branches: [[name: '*/main']],
-          doGenerateSubmoduleConfigurations: false,
-          extensions: [[$class: 'CloneOption', depth: 1, noTags: false, shallow: true]],
-          userRemoteConfigs: [[url: 'https://github.com/SubasishMula2001/Car-Damage-Detection.git', credentialsId: env.GIT_CREDENTIALS]]
-        ])
-      }
-    }
+    stage('Checkout (robust clone)') {
+  steps {
+    sh '''
+      set -euxo pipefail
+      echo "Workspace: ${WORKSPACE}"
+      # Tune git for large transfers / flaky networks
+      git --version || true
+      git config --global http.postBuffer 524288000 || true
+      git config --global http.lowSpeedLimit 0 || true
+      git config --global http.lowSpeedTime 999999 || true
+
+      REPO="https://github.com/SubasishMula2001/Car-Damage-Detection.git"
+      DEST="${WORKSPACE}/_tmp_clone"
+      RETRIES=3
+
+      # Ensure clean start
+      rm -rf "$DEST"
+      for i in $(seq 1 $RETRIES); do
+        echo "Clone attempt $i ..."
+        # Try a shallow clone first (fast). If it fails, fall back to full clone.
+        GIT_TRACE=1 GIT_CURL_VERBOSE=1 git clone --depth 1 "$REPO" "$DEST" && break || true
+        echo "Shallow clone failed; removing partial clone and retrying with full clone..."
+        rm -rf "$DEST"
+        sleep 2
+        GIT_TRACE=1 GIT_CURL_VERBOSE=1 git clone "$REPO" "$DEST" && break || true
+        # remove partial and retry
+        rm -rf "$DEST"
+        sleep 3
+      done
+
+      if [ ! -d "$DEST/.git" ]; then
+        echo "ERROR: git clone failed after $RETRIES attempts"
+        # show disk and network diagnostics
+        df -h || true
+        ip route || true
+        exit 1
+      fi
+
+      # Move contents into the pipeline workspace root (preserve workspace expected layout)
+      shopt -s dotglob || true
+      cp -a "$DEST/." "${WORKSPACE}/"
+      rm -rf "$DEST"
+      echo "Repo cloned into workspace"
+    '''
+  }
+}
 
     stage('Install dependencies & DVC') {
       steps {

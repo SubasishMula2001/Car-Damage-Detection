@@ -8,6 +8,40 @@ from PIL import Image
 import numpy as np
 import cv2
 
+# --- START: car cascade helper (paste after imports) ---
+# Path & loader for the car cascade
+DEFAULT_CAR_CASCADE_PATH = os.path.join(os.path.dirname(__file__), "cascades", "car_cascade.xml")
+_car_cascade = None
+
+def _get_car_cascade(path: str = DEFAULT_CAR_CASCADE_PATH):
+    """Lazy-load and return a cv2.CascadeClassifier for car detection."""
+    global _car_cascade
+    if _car_cascade is None:
+        if not os.path.exists(path):
+            raise FileNotFoundError(f"Car cascade not found at: {path}")
+        _car_cascade = cv2.CascadeClassifier(path)
+        if _car_cascade.empty():
+            raise RuntimeError(f"Failed to load cascade classifier from: {path}")
+    return _car_cascade
+
+def detect_car_in_frame(frame_bgr: np.ndarray,
+                        scaleFactor: float = 1.1,
+                        minNeighbors: int = 3,
+                        minSize: tuple = (60, 60)):
+    """
+    Run Haar cascade on a BGR frame (OpenCV style).
+    Returns (found: bool, boxes: list_of_[x,y,w,h])
+    """
+    cascade = _get_car_cascade()
+    gray = cv2.cvtColor(frame_bgr, cv2.COLOR_BGR2GRAY)
+    boxes = cascade.detectMultiScale(gray, scaleFactor=scaleFactor, minNeighbors=minNeighbors, minSize=minSize)
+    # boxes could be an empty tuple or numpy array
+    if isinstance(boxes, tuple) or len(boxes) == 0:
+        return False, []
+    # convert to python lists
+    return True, [list(map(int, b)) for b in boxes]
+# --- END: car cascade helper ---
+
 # Preprocessing (must match training)
 IMG_SIZE = 224
 _transform = transforms.Compose([

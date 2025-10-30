@@ -1,5 +1,0 @@
-outs:
-- md5: f85f6d4bbcdcb561705f1864339598ba
-  size: 94392090
-  hash: md5
-  path: saved_model.pth

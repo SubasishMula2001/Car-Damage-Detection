@@ -2,7 +2,7 @@ stages:
   prepare:
     cmd: python backend/data_preprocessing.py
     deps:
-    - data/raw
+    - data/raw          # restore actual data directory, not data/raw.dvc
     - backend/data_preprocessing.py
     params:
     - prepare.seed

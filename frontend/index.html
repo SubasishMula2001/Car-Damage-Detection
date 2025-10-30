@@ -3,8 +3,38 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Car Damage Detection — Live UI</title>
+  <title>AI Car Damage Detection | Free Online Vehicle Damage Detection</title>
   <link rel="stylesheet" href="styles.css" />
+  <meta name="description" content="Detect car damage instantly using AI. Upload a photo or use your camera to estimate vehicle damage severity and category in seconds.">
+  <meta name="keywords" content="ai car damage detection, car damage detection online,AI vehicle analysis, auto insurance app, car accident detection, vehicle inspection AI">
+  <meta name="robots" content="index, follow">
+  <meta name="author" content="Subasish Mula">
+
+  <!-- Open Graph for social sharing -->
+  <meta property="og:title" content="AI Car Damage Detection" />
+  <meta property="og:description" content="Instant car damage detection using AI. Upload or capture images to analyze damage severity." />
+  <meta property="og:image" content="https://media.licdn.com/dms/image/v2/D5603AQF_M77bhBcNeA/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1732371928975?e=1763596800&v=beta&t=Mcs7ryS4qLYF8bAs8mGzhH04uR1U5fHSgjUbNwxL-9c" />
+  <meta property="og:url" content="https://car-damage-app-eastus.azurewebsites.net/static/index.html" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "AI Car Damage Detection",
+    "operatingSystem": "Web",
+    "applicationCategory": "MachineLearningApplication",
+    "description": "An AI tool to detect and classify car damage from images.",
+    "offers": {
+      "@type": "Offer",
+      "price": "0.00",
+      "priceCurrency": "USD"
+    },
+    "url": "https://car-damage-app-eastus.azurewebsites.net/static/index.html",
+    "image": "https://media.licdn.com/dms/image/v2/D5603AQF_M77bhBcNeA/profile-displayphoto-shrink_400_400/profile-displayphoto-shrink_400_400/0/1732371928975?e=1763596800&v=beta&t=Mcs7ryS4qLYF8bAs8mGzhH04uR1U5fHSgjUbNwxL-9c"
+  }
+  </script>
+
 </head>
 <body>
   <div class="container">
@@ -13,19 +43,29 @@
       <p class="muted">Browser captures frames and sends to your FastAPI model for inference.</p>
     </header>
 
-    <main>
+    <main class="main-layout">
       <section class="left">
         <div class="video-card">
-          <video id="video" autoplay playsinline></video>
+          <video id="video" autoplay playsinline muted></video>
           <canvas id="captureCanvas" style="display:none;"></canvas>
+
           <div class="controls">
-            <label>Interval (s): <input id="intervalInput" type="number" min="0.2" step="0.2" value="3" /></label>
-            <label>Auto: <input id="autoToggle" type="checkbox" checked /></label>
-            <button id="snapBtn">Snapshot</button>
-            <button id="startBtn">Start</button>
-            <button id="stopBtn">Stop</button>
-            <label>Server URL:
-              <input id="serverUrl" type="text" value="http://localhost:8000/predict-file" />
+            <label class="control-row">Interval (s):
+              <input id="intervalInput" type="number" min="0.2" step="0.2" value="3" />
+            </label>
+
+            <label class="control-row">Auto:
+              <input id="autoToggle" type="checkbox" checked />
+            </label>
+
+            <div class="button-row">
+              <button id="snapBtn" class="btn">Snapshot</button>
+              <button id="startBtn" class="btn">Start</button>
+              <button id="stopBtn" class="btn btn-ghost">Stop</button>
+            </div>
+
+            <label class="server-row">
+              <input id="serverUrl" type="text" value="" disabled />
             </label>
           </div>
         </div>
@@ -42,10 +82,10 @@
       </aside>
     </main>
 
-    <!-- <footer class="footer">
+    <!-- optional floating footer -->
+    <footer class="footer">
   <p>Developed with <span class="heart">♥️</span> in India 🇮🇳</p>
-</footer> -->
-
+</footer>
 
   </div>
 

@@ -1,4 +1,17 @@
-// script.js (side-by-side private UI with history, 3s interval)
+// script.js - camera + auto-snapshot uploader (fixed and kept small-screen friendly)
+
+document.addEventListener("DOMContentLoaded", () => {
+  const serverInput = document.getElementById('serverUrl');
+  if (!serverInput) return;
+  const origin = window.location.origin || '';
+
+  // If running locally → use localhost, else use live Azure backend
+  if (origin.includes('localhost') || origin.includes('127.0.0.1')) {
+    serverInput.value = 'http://localhost:8000/predict-file';
+  } else {
+    serverInput.value = 'https://car-damage-app-eastus.azurewebsites.net/predict-file';
+  }
+});
 
 const video = document.getElementById("video");
 const canvas = document.getElementById("captureCanvas");
@@ -20,10 +33,13 @@ async function startCamera() {
     const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: false });
     video.srcObject = stream;
     await video.play();
+    // size canvas to video once playing
     canvas.width = video.videoWidth || 640;
     canvas.height = video.videoHeight || 480;
   } catch (e) {
-    alert("Camera error: " + e);
+    // show a nicer UI-friendly error
+    console.error("Camera error", e);
+    alert("Camera error: " + (e && e.message ? e.message : e));
   }
 }
 
@@ -81,9 +97,9 @@ async function doCaptureAndSend() {
     return;
   }
 
-  lastResult.textContent = res.label;
+  lastResult.textContent = res.label || "Unknown";
   lastConfidence.textContent = (res.confidence || 0).toFixed(3);
-  addHistoryItem(imgUrl, res.label, res.confidence || 0, !!res.saved_filename);
+  addHistoryItem(imgUrl, res.label || "Unknown", res.confidence || 0, !!res.saved_filename);
 }
 
 function startAuto() {
@@ -100,6 +116,7 @@ function stopAuto() {
   timerId = null;
 }
 
+/* Event listeners */
 snapBtn.addEventListener("click", () => doCaptureAndSend());
 startBtn.addEventListener("click", () => {
   autoToggle.checked = true;
@@ -114,7 +131,9 @@ autoToggle.addEventListener("change", () => {
   else stopAuto();
 });
 
-// Start camera + auto
+/* Start camera and optionally auto-run */
 startCamera().then(() => {
   if (autoToggle.checked) startAuto();
+}).catch(err => {
+  console.warn("startCamera error:", err);
 });

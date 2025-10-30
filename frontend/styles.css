@@ -1,4 +1,6 @@
-/* styles.css */
+/* styles.css - responsive adjustments + bug fixes */
+
+/* Theme variables */
 :root {
   --bg: #0f1724;
   --card: #0b1220;
@@ -7,28 +9,42 @@
   --green: #10b981;
   --red: #ef4444;
   --text: #e6eef8;
+  --gap: 14px;
+  --radius: 12px;
 }
 
+/* Base reset */
 * {
   box-sizing: border-box;
   font-family: Inter, system-ui, Arial, sans-serif;
 }
 
-body {
+html, body {
+  height: 100%;
   margin: 0;
+}
+
+body {
+  display: flex;
+  min-height: 100vh;
+  flex-direction: column;
   min-height: 100vh;
   background: linear-gradient(180deg, #071029 0%, #081025 100%);
   color: var(--text);
   padding: 18px;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 .container {
+  flex: 1;
   max-width: 1100px;
   margin: 0 auto;
+  padding-bottom: 80px; /* for floating footer */
 }
 
 header {
-  margin-bottom: 18px;
+  margin-bottom: 12px;
 }
 
 header h1 {
@@ -42,72 +58,106 @@ header h1 {
   font-size: 0.95rem;
 }
 
-main {
+/* Main layout: mobile-first column stacked, switches to row at >= 880px */
+.main-layout {
   display: flex;
-  gap: 18px;
+  flex-direction: column;
+  gap: var(--gap);
 }
 
+/* left / right panels */
 .left {
-  flex: 2;
+  flex: 1 1 auto;
 }
 
 .right {
-  flex: 1;
-  max-width: 360px;
+  flex: 0 0 auto;
+  width: 100%;
 }
 
+/* Video card */
 .video-card {
   background: var(--card);
-  border-radius: 12px;
+  border-radius: var(--radius);
   padding: 12px;
   box-shadow: 0 6px 18px rgba(2, 6, 23, 0.6);
 }
 
+/* Responsive video: keep aspect ratio, scalable height */
 #video {
   width: 100%;
-  height: 420px;
+  aspect-ratio: 16/9;
+  max-height: 60vh;
   background: #000;
   border-radius: 8px;
   object-fit: cover;
   display: block;
 }
 
+/* Controls - responsive layout */
 .controls {
-  margin-top: 8px;
+  margin-top: 10px;
   display: flex;
-  gap: 8px;
+  gap: 10px;
   align-items: center;
   flex-wrap: wrap;
 }
 
-.controls input[type="number"],
-.controls input[type="text"] {
-  padding: 6px;
-  border-radius: 6px;
-  border: 1px solid rgba(255, 255, 255, 0.06);
+/* control rows (labels + inputs) */
+.control-row,
+.server-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+
+/* make inputs flexible */
+.controls input[type="number"] {
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.06);
   background: transparent;
   color: inherit;
-}
-
-.controls input[type="number"] {
-  width: 80px;
+  width: 86px;
 }
 
 .controls input[type="text"] {
-  width: 320px;
+  padding: 8px;
+  border-radius: 8px;
+  border: 1px solid rgba(255,255,255,0.06);
+  background: transparent;
+  color: inherit;
+  min-width: 0;
+  width: 100%;
 }
 
-.controls button {
+/* Button row groups */
+.button-row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* Buttons */
+.controls .btn {
   background: var(--accent);
   color: white;
   border: none;
   padding: 8px 10px;
   border-radius: 8px;
   cursor: pointer;
+  font-weight: 600;
 }
 
+.controls .btn-ghost {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.06);
+}
+
+/* Status area */
 .status {
-  margin-top: 10px;
+  margin-top: 12px;
   padding: 10px;
   background: rgba(255, 255, 255, 0.03);
   border-radius: 8px;
@@ -118,35 +168,89 @@ main {
   color: var(--text);
 }
 
+/* History item layout - make sure content is vertically centered */
+
+/* Space between history items */
 .history {
-  margin-top: 6px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  max-height: 560px;
-  overflow: auto;
+  gap: 14px; /* increased gap between outputs (was 8px earlier) */
+  margin-top: 10px;
   padding-right: 6px;
+  max-height: 56vh;
+  overflow: auto;
 }
 
+/* Each item card */
 .history .item {
   display: flex;
-  gap: 8px;
   align-items: center;
-  background: rgba(255, 255, 255, 0.02);
-  padding: 8px;
-  border-radius: 8px;
+  justify-content: space-between;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.03);
+  border-radius: 10px;
+  padding: 10px 12px; /* small internal padding */
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
 }
 
+
+/* make thumbnail fixed and no shrink */
+.history .item .thumb {
+  width: 92px;
+  height: 60px;
+  flex-shrink: 0;
+}
+
+/* meta area (title + date) */
+.history .item .meta {
+  flex: 1 1 auto;
+  min-width: 0;
+  margin-left: 8px;
+}
+
+/* pill badge: centered text, prevent wrapping */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 72px;    /* pill width */
+  height: 42px;       /* vertically align and consistent height */
+  padding: 0 12px;    /* horizontal breathing room */
+  border-radius: 999px;
+  font-weight: 700;
+  font-size: 0.86rem;
+  white-space: nowrap; /* keep "No Save" on one line */
+  text-align: center;
+  box-sizing: border-box;
+}
+
+/* colors */
+.badge.ok {
+  background: rgba(16, 185, 129, 0.12);
+  color: var(--green);
+  border: 1px solid rgba(16, 185, 129, 0.09);
+}
+
+.badge.warn {
+  background: rgba(239, 68, 68, 0.08);
+  color: var(--red);
+  border: 1px solid rgba(239, 68, 68, 0.06);
+}
+
+/* thumb responsive size */
 .thumb {
   width: 88px;
   height: 56px;
   object-fit: cover;
   border-radius: 6px;
   background: #111;
+  flex-shrink: 0;
 }
 
+/* meta text */
 .meta {
-  flex: 1;
+  flex: 1 1 auto;
+  min-width: 0;
 }
 
 .meta .label {
@@ -158,6 +262,7 @@ main {
   color: var(--muted);
 }
 
+/* badges */
 .badge {
   padding: 4px 6px;
   border-radius: 999px;
@@ -176,40 +281,23 @@ main {
   color: var(--red);
   border: 1px solid rgba(239, 68, 68, 0.06);
 }
-/* Make footer fixed at bottom */
+
+/* --- Footer centered below the page content --- */
 .footer {
-  position: fixed;
+  position: relative;          /* stays in normal flow */
   bottom: 0;
-  left: 0;
   width: 100%;
   text-align: center;
-  padding: 12px;
-  background: linear-gradient(90deg, #1e293b, #0f172a);
-  color: #e2e8f0;
-  font-size: 1rem;
-  font-weight: 500;
-  letter-spacing: 0.5px;
-  box-shadow: 0 -2px 10px rgba(0,0,0,0.5);
-  z-index: 1000;
-  animation: fadeIn 1.5s ease-in-out;
-}
-
-.footer {
-  position: fixed;
-  bottom: 12px;          /* distance from bottom */
-  right: 12px;           /* distance from right */
-  text-align: center;
-  padding: 10px 18px;
+  margin-top: 30px;            /* space above it */
+  padding: 12px 0;
   background: linear-gradient(90deg, #1e293b, #0f172a);
   color: #e2e8f0;
   font-size: 0.95rem;
   font-weight: 500;
   letter-spacing: 0.5px;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
-  z-index: 1000;
+  border-radius: 12px 12px 0 0;
+  box-shadow: 0 -2px 10px rgba(0,0,0,0.5);
   animation: fadeIn 1.5s ease-in-out;
-  width: fit-content;    /* shrink to content */
 }
 
 .footer .heart {
@@ -226,4 +314,46 @@ main {
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
+}
+
+
+/* --- Prevent overlap with page content on very small screens --- */
+@media (max-width: 480px) {
+  .footer {
+    right: 8px;
+    bottom: 8px;
+    padding: 8px 12px;
+    font-size: 0.8rem;
+  }
+}
+
+
+/* Media queries - tablet & desktop */
+@media (min-width: 880px) {
+  .main-layout {
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 18px;
+  }
+
+  .left {
+    flex: 2;
+  }
+
+  .right {
+    flex: 1;
+    width: 360px;
+  }
+
+  .controls input[type="text"] {
+    width: 320px;
+  }
+}
+
+/* smaller phones - tighten paddings */
+@media (max-width: 420px) {
+  body { padding: 12px; }
+  .thumb { width: 72px; height: 48px; }
+  .controls input[type="number"] { width: 68px; }
+  header h1 { font-size: 1.25rem; }
 }

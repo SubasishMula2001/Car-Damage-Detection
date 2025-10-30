@@ -1,0 +1,81 @@
+# FROM python:3.12-slim
+
+# WORKDIR /app
+
+# # Install system dependencies
+# RUN apt-get update && apt-get install -y \
+#     gcc \
+#     g++ \
+#     && rm -rf /var/lib/apt/lists/*
+
+# # Install Python dependencies
+
+# COPY backend/requirementsprepare:
+#   seed: 42
+#   test_size: 0.2
+
+# train:
+#   epochs: 10
+#   learning_rate: 0.001
+#   batch_size: 32
+
+# evaluate:
+#   batch_size: 32
+# prepare:
+#   seed: 42
+#   test_size: 0.2
+
+# train:
+#   epochs: 10
+#   learning_rate: 0.001
+#   batch_size: 32
+
+# evaluate:
+#   batch_size: 32
+# .txt .
+# RUN pip install --no-cache-dir -r requirements.txt
+
+# # Copy application code
+# COPY backend/ .
+# COPY frontend/ ./static/
+
+# # Create necessary directories
+# RUN mkdir -p data/processed
+
+# # Expose port
+# EXPOSE 8000
+
+# # Run the application
+# CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
+# Dockerfile - CPU image for your FastAPI app (preserves pinned versions in requirements.txt)
+# FROM python:3.12-slim
+FROM python:3.11-slim
+
+WORKDIR /app
+
+# Install small set of system dependencies needed for building and OpenCV runtime
+RUN apt-get update && apt-get install -y --no-install-recommends \
+    gcc \
+    g++ \
+    libgl1 \
+    && rm -rf /var/lib/apt/lists/*
+
+# Copy only requirements first to leverage Docker cache (expects backend/requirements.txt)
+COPY backend/requirements.txt /app/requirements.txt
+
+# Install Python dependencies exactly as pinned in requirements.txt
+RUN pip install --upgrade pip && pip install --no-cache-dir -r /app/requirements.txt
+
+# Copy application code (backend should contain app.py, model_helper.py, cascades/, saved_model.pth, etc.)
+COPY backend/ .
+
+# Copy frontend into a /static folder (as your code serves /static)
+COPY frontend/ ./static/
+
+# Create directories used by app at runtime
+RUN mkdir -p server_captures data/processed
+
+EXPOSE 8000
+
+# Run the FastAPI app (assumes app:app is correct)
+CMD ["uvicorn", "app:app", "--host", "0.0.0.0", "--port", "8000"]
