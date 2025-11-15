@@ -105,7 +105,6 @@ curl -X POST -F "file=@test.jpg" http://autoinspectai.online/predict
 
 ## 📸 Screenshots
 
-(Add your screenshots inside `/screenshots` folder)
 
 | Live Camera | Prediction |
 |-------------|-------------|
