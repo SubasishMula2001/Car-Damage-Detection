@@ -1,146 +1,129 @@
-📄 README.md
-# 🚗 Car Damage Detection — Live (MLOps Ready)
+AutoInspect AI – Car Damage Detection System
 
-An AI-powered web application that detects **car damages in real-time** using a deep learning model, **FastAPI backend**, and a **webcam-enabled frontend**.  
-This project is **MLOps-ready** with **Docker**, **DVC**, and **Jenkins CI/CD** support.
+AutoInspect AI is an end-to-end car damage detection system built using Deep Learning (ResNet50) and deployed on Microsoft Azure App Service using Docker. The system automatically detects and classifies car damage from images into six categories, helping workshops, insurance teams, and vehicle owners make quicker decisions.
 
----
+Problem Statement
 
-## 📂 Folder Structure
+Manual car inspection takes time and may lead to mistakes, especially when many cars are lined up. This project uses AI to automatically detect car damage from images in just one second, reducing human effort and speeding up the inspection process.
 
+Objectives
 
-car_damage_detection/
-│── backend/ # FastAPI backend + model
-│ ├── app.py
-│ ├── model_helper.py
-│ ├── requirements.txt
-│ ├── saved_model.pth # tracked with DVC
-│ ├── classes.txt
-│ └── server_captures/ # saved damage frames
-│
-│── frontend/ # Static frontend UI
-│ ├── index.html
-│ ├── script.js
-│ └── styles.css
-│
-│── tests/ # Unit tests
-│── data/ # Dataset (optional, DVC tracked)
-│── Dockerfile # Backend Dockerfile
-│── docker-compose.yml # Backend + frontend orchestration
-│── Jenkinsfile # CI/CD pipeline
-│── .gitignore # Ignore unnecessary files
-│── README.md # Documentation
+Build an automated damage detection system
 
+Reduce manual inspection time
 
----
+Provide a simple live camera interface
 
-## ⚙️ Installation (Local)
+Support decision-making for insurance and service centers
 
-### 1. Clone repository
-```bash
-git clone https://github.com/your-username/car-damage-detection-live.git
-cd car-damage-detection-live
+Modules
+1. Data Collection & Preprocessing
 
-2. Create virtual environment
-python -m venv venv
-# Activate
-venv\Scripts\activate   # Windows
-source venv/bin/activate  # Linux/Mac
+Collected front and rear car images
 
-3. Install dependencies
-pip install -r backend/requirements.txt
+Resized, normalized, and augmented (flip, rotate, zoom)
 
-4. Run FastAPI server
-cd backend
-uvicorn app:app --reload --port 8000
+2. Model Development
 
-5. Open frontend
+Used ResNet50 (Transfer Learning)
 
-Go to:
+Classified 6 categories:
 
-http://127.0.0.1:8000/static/index.html
+Front Normal
 
-🐳 Run with Docker
-Build image
-docker build -t car-damage-detection .
+Front Broken
 
-Run container
-docker run -p 8000:8000 car-damage-detection
+Front Crushed
 
+Rear Normal
 
-Then open:
+Rear Broken
 
-http://127.0.0.1:8000/static/index.html
+Rear Crushed
 
-🐙 Run with Docker Compose
-docker-compose up --build
+Achieved ~92% test accuracy
 
+3. Backend – FastAPI
 
-Backend → http://localhost:8000
+Loads the trained PyTorch model
 
-Frontend → http://localhost:8080
+Accepts image uploads and returns predictions instantly
 
-📦 MLOps Integration
-🔹 DVC (Data & Model Versioning)
-dvc init
-dvc add backend/saved_model.pth
-git add backend/saved_model.pth.dvc .gitignore
-git commit -m "Track model with DVC"
-dvc remote add -d myremote gdrive://<folder-id>
-dvc push
+4. Frontend – HTML/CSS/JavaScript
 
-🔹 Jenkins (CI/CD)
+User-friendly interface
 
-The Jenkinsfile automates:
+Captures live camera frames
 
-Clone repo
+Displays results instantly
 
-Setup Python environment
+5. Deployment – Azure + Docker
 
-Run tests
+Containerized using Docker
 
-Build Docker image
+Hosted on Azure App Service
 
-Deploy container
+Accessible publicly from anywhere
 
-🎯 Features
+Live Application
 
-Real-time car damage detection using webcam feed.
+https://car-damage-app-eastus.azurewebsites.net/static/index.html
 
-History panel with thumbnails, labels, confidence scores.
+Tech Stack
 
-Auto-saves damaged frames to backend/server_captures/.
+Model: PyTorch, ResNet50
 
-Private mode: each user only sees their own predictions.
-
-MLOps-ready: Docker, Jenkins, DVC integrated.
-
-🛠 Tech Stack
-
-Backend: FastAPI (Python)
+Backend: FastAPI
 
 Frontend: HTML, CSS, JavaScript
 
-Deep Learning: PyTorch
+Deployment: Docker, Azure App Service
 
-Image Processing: OpenCV, Pillow
+Tools: Jupyter Notebook, VS Code, GitHub
 
-MLOps: Docker, Jenkins, DVC
+Results
 
-🚀 Future Work
+Training Accuracy: 94%
 
-Extend classification to multiple damage types (scratch, dent, broken glass).
+Validation Accuracy: 91%
 
-Cloud deployment (Azure/AWS).
+Test Accuracy: 92%
 
-Mobile app integration for roadside damage assessment.
+Prediction Time: ~1 second per image
 
-Multi-user dashboards with WebSockets.
+Features
 
-👨‍💻 Author
+Live camera detection
 
-Developed with ❤️ in India 🇮🇳
-M.Tech CSE (AI & DS) Project
+Fast and accurate predictions
 
+Cloud deployment with Azure
 
----
+Easy to use from browser
+
+Challenges & Learnings
+Challenges
+
+Overfitting during training
+
+Smooth camera integration with FastAPI backend
+
+Docker build optimization for Azure
+
+Learnings
+
+Transfer Learning with ResNet50
+
+Cloud deployment and MLOps basics
+
+Full-stack machine learning integration
+
+Future Enhancements
+
+Damage severity and repair cost estimation
+
+Better detection in night/low-light
+
+Integration with insurance claim workflows
+
+Mobile app version (Flutter/React Native)
