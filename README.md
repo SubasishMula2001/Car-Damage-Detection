@@ -37,7 +37,7 @@ Built using **ResNet50 + FastAPI + HTML/CSS/JS**, and fully deployed on **Micros
 
 | Layer | Tools Used |
 |-------|------------|
-| **Model** | PyTorch, ResNet50 |
+| **Model** | PyTorch,CNN, ResNet50 |
 | **Backend** | FastAPI, Uvicorn |
 | **Frontend** | HTML, CSS, JavaScript |
 | **Training / Experiments** | Jupyter, DVC |
