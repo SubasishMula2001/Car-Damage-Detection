@@ -1,4 +1,9 @@
+
+
 ---
+
+## ✅ **RAW MARKDOWN (Copy–Paste This Into README.md)**
+
 ````markdown
 # 🚗 AutoInspect AI — Car Damage Detection System
 
