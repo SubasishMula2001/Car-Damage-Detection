@@ -1,129 +1,155 @@
-AutoInspect AI – Car Damage Detection System
+🚗 AutoInspect AI — Car Damage Detection System
 
-AutoInspect AI is an end-to-end car damage detection system built using Deep Learning (ResNet50) and deployed on Microsoft Azure App Service using Docker. The system automatically detects and classifies car damage from images into six categories, helping workshops, insurance teams, and vehicle owners make quicker decisions.
+A full-stack deep learning application that automatically detects car damage type from images (Front/Rear — Normal, Broken, Crushed).
 
-Problem Statement
+Built using ResNet50 + FastAPI + HTML/CSS/JS, and fully deployed on Microsoft Azure App Service using Docker.
 
-Manual car inspection takes time and may lead to mistakes, especially when many cars are lined up. This project uses AI to automatically detect car damage from images in just one second, reducing human effort and speeding up the inspection process.
+Upgraded version with:
 
-Objectives
+Full frontend camera-based UI
 
-Build an automated damage detection system
+FastAPI backend
 
-Reduce manual inspection time
+Azure cloud deployment
 
-Provide a simple live camera interface
+Real-time prediction (every 3 seconds)
 
-Support decision-making for insurance and service centers
+🚀 Live Demo
+Component	URL
+🌐 Full Application (Azure)	https://car-damage-app-eastus.azurewebsites.net/static/index.html
+📌 Key Features
 
-Modules
-1. Data Collection & Preprocessing
+🧠 Deep Learning model (ResNet50) trained for 6 damage classes
 
-Collected front and rear car images
+🚘 Predicts: Front Normal, Front Broken, Front Crushed, Rear Normal, Rear Broken, Rear Crushed
 
-Resized, normalized, and augmented (flip, rotate, zoom)
+📷 Live camera prediction (auto-captures every 3 seconds)
 
-2. Model Development
+⚡ Instant results with FastAPI backend
 
-Used ResNet50 (Transfer Learning)
+🐳 Containerized using Docker
 
-Classified 6 categories:
+☁️ Deployed on Azure App Service
 
-Front Normal
+📱 Simple and user-friendly UI (HTML/CSS/JS)
 
-Front Broken
+🛠️ Tech Stack
+Layer	Tools Used
+Model	PyTorch, ResNet50, CNN
+Backend	FastAPI, Uvicorn, Python
+Frontend	HTML, CSS, JavaScript
+Deployment	Azure App Service, Docker
+Development	Jupyter Notebook, VS Code, GitHub
+📬 API Usage
+POST /predict
 
-Front Crushed
+Headers: Content-Type: multipart/form-data
 
-Rear Normal
+Body: Image file (file)
 
-Rear Broken
+URL:
+https://car-damage-app-eastus.azurewebsites.net/predict
 
-Rear Crushed
+✅ Example (using cURL)
+curl -X POST -F "file=@test.jpg" https://car-damage-app-eastus.azurewebsites.net/predict
 
-Achieved ~92% test accuracy
+✅ Sample Response
+{
+  "prediction": "Rear Broken",
+  "confidence": 0.93
+}
 
-3. Backend – FastAPI
+🧠 Model Details
 
-Loads the trained PyTorch model
+Base model: ResNet50 pre-trained on ImageNet
 
-Accepts image uploads and returns predictions instantly
+Fine-tuned to classify 6 categories
 
-4. Frontend – HTML/CSS/JavaScript
+Dataset includes images of front & rear car surfaces
 
-User-friendly interface
+Techniques used:
 
-Captures live camera frames
+Data augmentation (rotate, flip, zoom)
 
-Displays results instantly
+Transfer learning
 
-5. Deployment – Azure + Docker
+Normalization
 
-Containerized using Docker
+Dropout to reduce overfitting
 
-Hosted on Azure App Service
+Final Accuracy:
 
-Accessible publicly from anywhere
+Training: 94%
 
-Live Application
+Validation: 91%
 
-https://car-damage-app-eastus.azurewebsites.net/static/index.html
+Test: 92%
 
-Tech Stack
+🖥️ Frontend
 
-Model: PyTorch, ResNet50
+Built with HTML, CSS, and JavaScript
 
-Backend: FastAPI
+Features:
 
-Frontend: HTML, CSS, JavaScript
+Live camera feed capture
 
-Deployment: Docker, Azure App Service
+Automatic image capture every 3 seconds
 
-Tools: Jupyter Notebook, VS Code, GitHub
+Displays predicted label instantly
 
-Results
+Works on mobile and desktop
 
-Training Accuracy: 94%
+📷 Screenshots
+Live Camera	Prediction Output
 
-Validation Accuracy: 91%
+	
 
-Test Accuracy: 92%
+(Add screenshots in your repo folder screenshots/)
 
-Prediction Time: ~1 second per image
+⚙️ Local Setup
+🔧 Step-by-step
+# 1. Clone repository
+git clone https://github.com/<your-username>/Car-Damage-Detection.git
+cd Car-Damage-Detection
 
-Features
+# 2. Create virtual environment (optional)
+python -m venv venv
+source venv/bin/activate      # Windows: venv\Scripts\activate
 
-Live camera detection
+# 3. Install requirements
+pip install -r requirements.txt
 
-Fast and accurate predictions
+# 4. Run FastAPI backend
+uvicorn app:app --reload
 
-Cloud deployment with Azure
+🔗 Local URLs
 
-Easy to use from browser
+Frontend: Open static/index.html
 
-Challenges & Learnings
-Challenges
+Backend: http://127.0.0.1:8000/predict
 
-Overfitting during training
+🌍 Deployment
+Platform	Purpose	Link
+Azure App Service	Full Application (Frontend + Backend)	https://car-damage-app-eastus.azurewebsites.net/static/index.html
 
-Smooth camera integration with FastAPI backend
+Docker	Containerized FastAPI backend	Deployed on Azure
+📦 Requirements
+fastapi
+uvicorn
+pytorch
+torchvision
+pillow
+python-multipart
 
-Docker build optimization for Azure
+🙋‍♂️ Author
 
-Learnings
+Subasish Mula
+📧 subasishmula@gmail.com
 
-Transfer Learning with ResNet50
+🔗 GitHub: https://github.com/SubasishMula2001
 
-Cloud deployment and MLOps basics
+📄 License
 
-Full-stack machine learning integration
+This project is licensed under the MIT License.
 
-Future Enhancements
-
-Damage severity and repair cost estimation
-
-Better detection in night/low-light
-
-Integration with insurance claim workflows
-
-Mobile app version (Flutter/React Native)
+⭐ Found this project useful? Don’t forget to star the repo!
