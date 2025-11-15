@@ -1,16 +1,14 @@
----
-
-````markdown
 # 🚗 AutoInspect AI — Car Damage Detection System
 
 A full-stack deep learning application that automatically detects **car damage type** from images (Front/Rear — Normal, Broken, Crushed).
 
-Built using **ResNet50 + FastAPI + HTML/CSS/JS**, and fully deployed on **Microsoft Azure App Service using Docker**.
+Built using **ResNet50 + FastAPI + HTML/CSS/JS**, and fully deployed on **Microsoft Azure App Service using Docker** with a custom domain.
 
 > Upgraded version with:  
 > - Full frontend camera-based UI  
 > - FastAPI backend  
 > - Azure cloud deployment  
+> - Custom domain support  
 > - Real-time prediction (every 3 seconds)
 
 ---
@@ -19,7 +17,7 @@ Built using **ResNet50 + FastAPI + HTML/CSS/JS**, and fully deployed on **Micros
 
 | Component | URL |
 |-----------|-----|
-| 🌐 Full Application (Azure) | **https://car-damage-app-eastus.azurewebsites.net/static/index.html** |
+| 🌐 Full Application | **http://autoinspectai.online/** |
 
 ---
 
@@ -27,11 +25,11 @@ Built using **ResNet50 + FastAPI + HTML/CSS/JS**, and fully deployed on **Micros
 
 - 🧠 Deep Learning model (**ResNet50**) trained for 6 damage classes  
 - 🚘 Predicts: **Front Normal, Front Broken, Front Crushed, Rear Normal, Rear Broken, Rear Crushed**  
-- 📷 **Live camera detection** (auto-capture every 3 seconds)  
-- ⚡ Fast and accurate predictions via FastAPI backend  
-- 🐳 Backend fully containerized with Docker  
-- ☁️ Deployed on **Microsoft Azure App Service**  
-- 📱 Clean and responsive HTML/CSS/JS interface
+- 📷 Real-time **camera-based automatic detection**  
+- ⚡ Fast prediction via FastAPI backend  
+- 🐳 Dockerized backend for deployment  
+- ☁️ Hosted with Azure App Service + custom domain  
+- 📱 Clean HTML/CSS/JS UI with auto-refresh
 
 ---
 
@@ -39,11 +37,12 @@ Built using **ResNet50 + FastAPI + HTML/CSS/JS**, and fully deployed on **Micros
 
 | Layer | Tools Used |
 |-------|------------|
-| **Model** | PyTorch, ResNet50, CNN |
-| **Backend** | FastAPI, Uvicorn, Python |
+| **Model** | PyTorch, ResNet50 |
+| **Backend** | FastAPI, Uvicorn |
 | **Frontend** | HTML, CSS, JavaScript |
+| **Training / Experiments** | Jupyter, DVC |
 | **Deployment** | Azure App Service, Docker |
-| **Development** | Jupyter Notebook, VS Code, GitHub |
+| **Development** | VS Code, GitHub |
 
 ---
 
@@ -52,17 +51,17 @@ Built using **ResNet50 + FastAPI + HTML/CSS/JS**, and fully deployed on **Micros
 ### **POST** `/predict`
 
 - **Headers:** `Content-Type: multipart/form-data`  
-- **Body:** Image file (`file`)  
-- **URL:**  
-  `https://car-damage-app-eastus.azurewebsites.net/predict`
+- **Body:** Image (`file`)  
+- **Hosted API URL:**  
+  `http://autoinspectai.online/predict`
 
-### ✔️ Sample Request (cURL)
+### ✔️ cURL Example
 
 ```bash
-curl -X POST -F "file=@test.jpg" https://car-damage-app-eastus.azurewebsites.net/predict
+curl -X POST -F "file=@test.jpg" http://autoinspectai.online/predict
 ```
 
-### ✔️ Sample Response
+### ✔️ Sample API Response
 
 ```json
 {
@@ -75,80 +74,82 @@ curl -X POST -F "file=@test.jpg" https://car-damage-app-eastus.azurewebsites.net
 
 ## 🧠 Model Details
 
-- **Base model:** ResNet50 (pre-trained on ImageNet)  
-- **Fine-tuned** for 6 car damage classes (Front/Rear × Normal/Broken/Crushed)  
-- Dataset contains front & rear car images with augmentation and normalization  
-- Techniques used:
-  - Data augmentation (rotation, flip, zoom)  
-  - Transfer learning (fine-tuning)  
-  - Batch normalization & dropout to reduce overfitting
+- **Architecture:** ResNet50 (ImageNet pre-trained)  
+- **Custom head:** 6 output classes  
+- **Classes:**  
+  - Front Normal  
+  - Front Broken  
+  - Front Crushed  
+  - Rear Normal  
+  - Rear Broken  
+  - Rear Crushed  
 
-### 📊 Final Metrics
+### 📊 Metrics
 
 - **Training Accuracy:** 94%  
 - **Validation Accuracy:** 91%  
 - **Test Accuracy:** 92%  
-- **Inference Speed:** ~1 sec / image
+- **Inference Speed:** ~1 second per image
 
 ---
 
 ## 🖥️ Frontend
 
-- Built with **HTML / CSS / JavaScript**  
-- Auto-captures images from live camera feed (every 3 seconds)  
-- Sends images to FastAPI backend and displays predictions in real time  
-- Mobile-friendly and simple UI for quick inspections
+- Built with **HTML/CSS/JS**  
+- Auto-captures image every **3 seconds**  
+- Sends to backend using Fetch API  
+- Displays prediction dynamically  
+- Responsive layout  
 
 ---
 
 ## 📸 Screenshots
 
-> Add images to a `/screenshots` folder in your repository and reference them below.
+(Add your screenshots inside `/screenshots` folder)
 
-| Live Camera | Prediction Output |
-|-------------|-------------------|
+| Live Camera | Prediction |
+|-------------|-------------|
 | ![camera](screenshots/camera.png) | ![output](screenshots/output.png) |
 
 ---
 
 ## ⚙️ Local Setup
 
-### 🔧 Step-by-step
+### 🔧 Step-by-step Setup
 
 ```bash
-# 1. Clone the repository
+# 1. Clone repository
 git clone https://github.com/SubasishMula2001/Car-Damage-Detection.git
 cd Car-Damage-Detection
 
-# 2. (Optional) Create virtual environment
+# 2. Create virtual env
 python -m venv venv
-# Linux / macOS
+# Windows:
+venv\Scripts\activate
+# Linux/Mac:
 source venv/bin/activate
-# Windows (PowerShell)
-venv\Scripts\Activate.ps1
 
-# 3. Install requirements
+# 3. Install dependencies
 pip install -r requirements.txt
 
-# 4. Run FastAPI backend (from project root)
-uvicorn app:app --reload
+# 4. Run FastAPI backend (correct command)
+python -m uvicorn backend.app:app --reload --port 8000
 ```
 
 ### 🔗 Local URLs
 
-- Frontend: open `static/index.html` in your browser  
+- Frontend: open `frontend/index.html`  
 - Backend: `http://127.0.0.1:8000/predict`
 
 ---
 
 ## 🌍 Deployment
 
-| Platform | Purpose | Link |
-|----------|---------|------|
-| **Azure App Service** | Full App Deployment (Frontend + Backend) | https://car-damage-app-eastus.azurewebsites.net/static/index.html |
-| **Docker** | Containerized FastAPI backend (used for Azure deployment) | — |
-
-> Ensure CORS is allowed on the API and that the frontend points to the correct API URL when deployed.
+| Platform | Purpose | URL |
+|----------|---------|-----|
+| **Azure App Service** | Deployed App | http://autoinspectai.online/ |
+| **Docker** | Backend container | used for Azure deployment |
+| **DVC** | Dataset & pipeline tracking | `dvc.yaml` |
 
 ---
 
@@ -163,27 +164,42 @@ pillow
 python-multipart
 opencv-python
 numpy
+dvc
 ```
 
 ---
 
-## 🔧 Project Structure (suggested)
+## 📁 Project Structure (Your Repo)
 
 ```
-Car-Damage-Detection/
-├── app.py                  # FastAPI app
-├── saved_model.pth         # Trained PyTorch model (git-lfs or omit large files)
-├── requirements.txt
-├── static/
+CAR_DAMAGE_DETECTION/
+├── backend/
+│   ├── app.py
+│   ├── model_helper.py
+│   ├── evaluation.py
+│   ├── data_preprocessing.py
+│   ├── monitoring.py
+│   ├── cascades/
+│   └── server_captures/
+│
+├── data/
+├── dvc_store/
+├── frontend/
 │   ├── index.html
-│   ├── app.js
+│   ├── script.js
 │   └── styles.css
-├── screenshots/
-│   ├── camera.png
-│   └── output.png
+│
 ├── notebooks/
-│   └── training_notebook.ipynb
-└── README.md
+│   ├── Car_Damage_Detection.ipynb
+│   └── damage_prediction.ipynb
+│
+├── logs/
+├── saved_model.pth
+├── Dockerfile
+├── docker-compose.yml
+├── requirements.txt
+├── README.md
+└── test.jpg
 ```
 
 ---
@@ -203,22 +219,3 @@ This project is licensed under the **MIT License**.
 ---
 
 ### ⭐ If you found this helpful, please star the repo!
-````
-
----
-
-✅ **THIS is the original unrendered Markdown.**  
-When you paste this into GitHub, it will display perfectly with:
-
-- Proper `#` headings  
-- Proper `##` subheadings  
-- Proper `---` separators  
-- Tables & code blocks  
-- Emojis  
-- Line breaks  
-
-If you want, I can also provide:
-
-✅ RAW LinkedIn post  
-✅ RAW GitHub short description  
-✅ RAW project summary for resume
